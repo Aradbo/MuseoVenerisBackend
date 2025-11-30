@@ -3,7 +3,7 @@
 const express = require("express");
 const router = express.Router();
 
-const metodoPagoController = require("../controllers/metodoPago.controller");
+const metodoPagoController = require("../controllers/metodoPago.Controller");
 
 // GET ALL
 router.get("/", metodoPagoController.getAll);

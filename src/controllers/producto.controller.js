@@ -1,0 +1,97 @@
+const { executeSP } = require("../utils/executeSP");
+const { sendSpResponse } = require("../utils/sendSpResponse");
+const { sql } = require("../config/db");
+
+// ---------------- GET ALL ----------------
+exports.getAll = async (req, res) => {
+  const result = await executeSP("SP_Producto_GetAll");
+  return sendSpResponse(res, result);
+};
+
+// ---------------- GET BY ID ----------------
+exports.getById = async (req, res) => {
+  const { id } = req.params;
+
+  const result = await executeSP("SP_Producto_GetById", {
+    idProducto: id
+  });
+
+  return sendSpResponse(res, result);
+};
+
+// ---------------- SEARCH ----------------
+exports.search = async (req, res) => {
+  const { texto } = req.query;
+
+  const result = await executeSP("SP_Producto_Search", { texto });
+
+  return sendSpResponse(res, result);
+};
+
+// ---------------- CREATE ----------------
+exports.create = async (req, res) => {
+  const params = req.body;
+
+  const result = await executeSP(
+    "SP_Producto_Create",
+    params,
+    {
+      TipoMensaje: sql.Int,
+      Mensaje: sql.VarChar(200)
+    }
+  );
+
+  return sendSpResponse(res, result);
+};
+
+// ---------------- UPDATE ----------------
+exports.update = async (req, res) => {
+  const params = req.body;
+
+  const result = await executeSP(
+    "SP_Producto_Update",
+    params,
+    {
+      TipoMensaje: sql.Int,
+      Mensaje: sql.VarChar(200)
+    }
+  );
+
+  return sendSpResponse(res, result);
+};
+
+// ---------------- DELETE ----------------
+exports.delete = async (req, res) => {
+  const { id } = req.params;
+
+  const result = await executeSP(
+    "SP_Producto_Delete",
+    { idProducto: id },
+    {
+      TipoMensaje: sql.Int,
+      Mensaje: sql.VarChar(200)
+    }
+  );
+
+  return sendSpResponse(res, result);
+};
+
+
+
+exports.actualizarImagenProducto = async(req,res)=>{
+  try{
+    const id = req.params.idProducto;
+    if(!req.file) return res.status(400).json({message:"No se subió ninguna imagen"});
+
+    const url = "/uploads/productos/" + req.file.filename;
+
+    await pool.request()
+      .input("url",url)
+      .input("id",id)
+      .query("UPDATE Producto SET imagen_url=@url WHERE idProducto=@id");
+
+    res.json({message:"Imagen actualizada",url});
+  }catch(e){
+    res.status(500).json({message:"Error",error:e.message});
+  }
+};

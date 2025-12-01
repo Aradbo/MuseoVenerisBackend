@@ -78,20 +78,28 @@ exports.delete = async (req, res) => {
 
 
 
-exports.actualizarImagenProducto = async(req,res)=>{
-  try{
+// ================= ACTUALIZAR IMAGEN AUTOMÁTICO ==================
+exports.actualizarImagenProducto = async (req, res) => {
+  try {
     const id = req.params.idProducto;
-    if(!req.file) return res.status(400).json({message:"No se subió ninguna imagen"});
 
-    const url = "/uploads/productos/" + req.file.filename;
+    if (!req.file) return res.status(400).json({ ok:false, message:"No se subió ninguna imagen" });
 
+    const url = "/uploads/productos/" + req.file.filename; // ruta lista para card
+
+    const pool = await getConnection();
     await pool.request()
-      .input("url",url)
-      .input("id",id)
-      .query("UPDATE Producto SET imagen_url=@url WHERE idProducto=@id");
+      .input("id", id)
+      .input("url", url)
+      .query(`UPDATE Producto SET urlImagen=@url WHERE idProducto=@id`);
 
-    res.json({message:"Imagen actualizada",url});
-  }catch(e){
-    res.status(500).json({message:"Error",error:e.message});
+    return res.json({
+      ok: true,
+      message: "Imagen actualizada y enlazada a BD con éxito",
+      urlImagen: url
+    });
+
+  } catch(e){
+    return res.status(500).json({ ok:false, message:"Error guardando imagen", error:e.message });
   }
 };

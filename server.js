@@ -115,6 +115,9 @@ const uploadProductoRoutes = require("./src/routes/uploadProducto.routes");
 
 app.use("/api/uploads", uploadProductoRoutes);
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+
 // Habilitar acceso a carpeta pública
 app.use("/uploads", express.static("src/uploads"));
 

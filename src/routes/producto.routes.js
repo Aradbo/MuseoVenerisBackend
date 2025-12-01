@@ -10,7 +10,9 @@ router.post("/", controller.create);
 router.put("/", controller.update);
 router.delete("/:id", controller.delete);
 
+
 const upload = require("../middleware/uploadProducto");
-router.post("/upload-imagen/:idProducto", upload.single("imagen"), actualizarImagenProducto);
+
+router.post("/upload-imagen/:idProducto", upload.single("imagen"), controller.actualizarImagenProducto);
 
 module.exports = router;

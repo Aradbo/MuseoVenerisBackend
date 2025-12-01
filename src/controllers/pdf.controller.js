@@ -128,7 +128,11 @@ doc.moveDown(1);
     doc.fillColor("#111").fontSize(12);
     doc.text(`    Código:        ${f.codigo_factura}`);
     doc.text(
-      `    Fecha emisión: ${new Date(f.fecha_emision).toLocaleString("es-HN")}\n`
+  `    Fecha emisión: ${new Date(f.fecha_emision).toLocaleDateString("es-HN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    })}\n`
     );
     doc.text(`    Visitante:     ${f.visitante}`);
     doc.text(
@@ -136,7 +140,7 @@ doc.moveDown(1);
     );
     doc.moveDown(2.2);
 
-    // ================= TABLA PREMIUM =================
+    // ================= TABLA =================
     doc.fontSize(16)
       .fillColor("#D4AF37")
       .text("        Detalles de compra", { underline: true });
